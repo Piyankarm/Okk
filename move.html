@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .move-container {
+            max-width: 600px;
+            margin: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .move-type {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="move-container" id="move-container">
+        <h1 id="move-name">Loading...</h1>
+        <p><strong>Type:</strong> <span id="move-type"></span></p>
+        <p><strong>Power:</strong> <span id="move-power"></span></p>
+        <p><strong>Accuracy:</strong> <span id="move-accuracy"></span></p>
+        <p><strong>Description:</strong> <span id="move-description"></span></p>
+    </div>
+    <script>
+      async function loadMoveDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const moveName = urlParams.get("name");
+
+    if (!moveName) {
+        document.getElementById("move-container").innerHTML = "<p>Move not found!</p>";
+        return;
+    }
+
+    // Fetch move details from the API
+    const apiUrl = `https://pokeapi.co/api/v2/move/${moveName.toLowerCase()}`;
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Move not found");
+
+        const moveDetails = await response.json();
+
+        // Populate the move details
+        document.getElementById("move-name").innerText = moveDetails.name;
+        document.getElementById("move-type").innerHTML = `
+            <span class="move-type" style="background-color: ${getTypeColor(moveDetails.type.name)};">
+                ${moveDetails.type.name}
+            </span>
+        `;
+        document.getElementById("move-power").innerText = moveDetails.power || "—";
+        document.getElementById("move-accuracy").innerText = moveDetails.accuracy || "—";
+        document.getElementById("move-description").innerText = moveDetails.effect_entries.length > 0
+            ? moveDetails.effect_entries[0].effect
+            : "No description available.";
+    } catch (error) {
+        document.getElementById("move-container").innerHTML = "<p>Move not found!</p>";
+    }
+}
+
+function getTypeColor(type) {
+    const typeColors = {
+        normal: "#A8A878",
+        fire: "#F08030",
+        water: "#6890F0",
+        grass: "#78C850",
+        electric: "#F8D030",
+        ice: "#98D8D8",
+        fighting: "#C03028",
+        poison: "#A040A0",
+        ground: "#E0C068",
+        flying: "#A890F0",
+        psychic: "#F85888",
+        bug: "#A8B820",
+        rock: "#B8A038",
+        ghost: "#705898",
+        dragon: "#7038F8",
+        dark: "#705848",
+        steel: "#B8B8D0",
+        fairy: "#EE99AC",
+    };
+    return typeColors[type.toLowerCase()] || "#68A090"; // Default color
+}
+
+// Load move details when the page loads
+loadMoveDetails();
+    </script>
+</body>
+</html>

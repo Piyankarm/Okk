@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Pokémon Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #pokemonImage {
+      margin-top: 20px;
+    }
+    #pokemonGif {
+      max-width: 200px;
+      max-height: 200px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Search for Pokémon</h1>
+
+  <!-- Search bar -->
+  <input type="text" id="pokemonSearch" placeholder="Enter Pokémon Name or ID" oninput="searchPokemon()">
+
+  <!-- Display Pokémon animation -->
+  <div id="pokemonImage">
+    <img id="pokemonGif" src="" alt="No Pokémon found">
+  </div>
+
+  <script>
+    // Dynamically fetch the image URL based on the input
+    function searchPokemon() {
+      const searchQuery = document.getElementById("pokemonSearch").value.toLowerCase();
+      const pokemonGif = document.getElementById("pokemonGif");
+
+      if (searchQuery === "") {
+        pokemonGif.src = "";  // Clear the GIF if input is empty
+        return;
+      }
+
+      // Construct the URL for the Pokémon sprite based on the search query
+      const pokemonUrl = `https://play.pokemonshowdown.com/sprites/ani/${searchQuery}.gif`;
+
+      // Validate if the image exists
+      const img = new Image();
+      img.onload = () => {
+        pokemonGif.src = pokemonUrl;  // Set the GIF if it exists
+      };
+      img.onerror = () => {
+        pokemonGif.src = "";  // Clear the image if not found
+      };
+      img.src = pokemonUrl;  // Trigger image load
+    }
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Pokémon Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #pokemonSearch {
+      width: 300px;
+      padding: 10px;
+    }
+    #sketchfabModel {
+      width: 400px;
+      height: 400px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Search for Pokémon</h1>
+  <!-- Search bar -->
+  <input type="text" id="pokemonSearch" placeholder="Enter Pokémon Name or ID" oninput="loadPokemonModel()">
+
+  <!-- Display 3D Pokémon model -->
+  <div id="sketchfabModel"></div>
+
+  <script>
+    function loadPokemonModel() {
+      const searchQuery = document.getElementById("pokemonSearch").value.toLowerCase();
+      const modelContainer = document.getElementById("sketchfabModel");
+
+      if (searchQuery === "") {
+        modelContainer.innerHTML = "";  // Clear if no input
+        return;
+      }
+
+      // Construct the Sketchfab model URL dynamically based on search input
+      const modelUrl = `https://sketchfab.com/models/${searchQuery}/embed`;
+
+      // Embed Sketchfab model dynamically
+      modelContainer.innerHTML = `
+        <iframe src="${modelUrl}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      `;
+    }
+  </script>
+
+</body>
+</html>
